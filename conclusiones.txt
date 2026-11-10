@@ -1,0 +1,17 @@
+================================================================================
+INFORME DE HALLAZGOS Y CONCLUSIONES - PROYECTO DEMOBLAZE AUTOMATION
+AUTOR: Jorge Leonardo Castro Salazar
+================================================================================
+
+1. HALLAZGOS TÉCNICOS EN PRUEBAS UI E2E (SELENIUM + PYTEST + POM)
+- Manejo de Alertas Nativas: La plataforma Demoblaze utiliza alertas de JavaScript nativas al momento de agregar productos al carrito. Fue necesario implementar manejadores y esperas explícitas para capturar y aceptar dichas alertas de forma síncrona sin bloquear la ejecución.
+- Sincronización de Modales: Durante la prueba del flujo de compra ("Place Order"), el formulario emerge dinámicamente mediante un componente modal. Se identificó la necesidad de aplicar esperas explícitas de visibilidad (`visibility_of_element_located`) para evitar excepciones de interactividad (`ElementNotInteractableException`) al momento de rellenar los campos de texto.
+- Arquitectura Escalable: La aplicación del patrón de diseño Page Object Model (POM) permitió desacoplar totalmente los localizadores y acciones de la lógica de prueba, garantizando alta legibilidad, fácil mantenimiento y reusabilidad del código.
+
+2. HALLAZGOS TÉCNICOS EN PRUEBAS DE API REST (REQUESTS + PYTEST)
+- Comportamiento del Endpoint de Registro (/signup): Se evidenció que al intentar registrar un usuario duplicado o ya existente, el servicio responde con un código de estado HTTP `200 OK` (en lugar de códigos semánticos como `400 Bad Request` o `409 Conflict`), manejando el error mediante un mensaje descriptivo dentro del cuerpo de la respuesta (`"This user already exist."`). Esto representa un punto de mejora potencial en el diseño de la API para ajustarse estrictamente a los estándares RESTful.
+- Comportamiento del Endpoint de Login (/login): La autenticación valida adecuadamente la integridad de las credenciales, retornando un token de sesión (`Auth_token`) ante accesos exitosos y denegando el acceso con mensajes descriptivos ante claves erróneas.
+
+3. CONCLUSIONES GENERALES
+- Cobertura de Calidad: La automatización combinada de extremo a extremo (UI) y de servicios backend (API) garantiza una validación robusta tanto de la experiencia del usuario final como de la integridad de las reglas de negocio a nivel de servidor.
+- Estabilidad y Reproducibilidad: El uso de Python junto con Pytest y Selenium Manager asegura un entorno de ejecución limpio, portable y fácil de reproducir por cualquier evaluador sin dependencias complejas de controladores en el sistema operativo.
